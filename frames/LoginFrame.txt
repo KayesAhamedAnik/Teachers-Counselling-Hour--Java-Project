@@ -1,0 +1,151 @@
+package frames;
+
+import java.lang.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+import java.io.*;
+
+import repository.*;
+import entity.*;
+
+public class LoginFrame extends JFrame implements ActionListener
+{
+	private JPanel panel;
+	private JLabel userLabel,passLabel,textLabel,imageLabel;
+	private JPasswordField passF;
+	private JTextField userTf;
+	private JButton loginBtn,backBtn,showBtn;
+	private Color btnColor,backgroungColor;
+	private ImageIcon img;
+	private Font myFont;
+	
+
+	public LoginFrame()
+	{
+		super("AIUB Faculty Counselling Hours ~ Log In");
+		this.setSize(450, 550);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+		
+		panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBackground(Color.WHITE);
+		
+		btnColor=new Color(63,81,181);
+		myFont=new Font("Consolas",Font.BOLD,18);
+		
+		img=new ImageIcon("aiub.png");
+		imageLabel=new JLabel(img);
+		imageLabel.setBounds(145,20,160,161);
+		panel.add(imageLabel);
+		
+		textLabel=new JLabel("Sign in with your organizational id number");
+		textLabel.setBounds(110,190,400,25);
+		textLabel.setOpaque(true);
+		textLabel.setBackground(Color.WHITE);
+		panel.add(textLabel);
+		
+		userLabel=new JLabel("User Name :");
+		userLabel.setBounds(20,220,400,30);
+		userLabel.setFont(myFont);
+		panel.add(userLabel);
+		
+		
+		
+		userTf=new JTextField();
+		userTf.setBounds(20,250,400,40);
+		userTf.setFont(myFont);
+		panel.add(userTf);
+		
+		passLabel=new JLabel("Password  :");
+		passLabel.setBounds(20,290,400,30);
+		passLabel.setFont(myFont);
+		panel.add(passLabel);
+		
+		passF=new JPasswordField();
+		passF.setBounds(20,320,400,40);
+		panel.add(passF);
+		
+		loginBtn=new JButton("Log In");
+		loginBtn.setBounds(20,380,400,40);
+		loginBtn.addActionListener(this);
+		loginBtn.setBackground(btnColor);
+		loginBtn.setForeground(Color.WHITE);
+		loginBtn.setFont(myFont);
+		panel.add(loginBtn);
+		
+		backBtn=new JButton("Back");
+		backBtn.setBounds(20,430,400,40);
+		backBtn.addActionListener(this);
+		backBtn.setFont(myFont);
+		backBtn.setForeground(Color.WHITE);
+		backBtn.setBackground(btnColor);
+		panel.add(backBtn);
+		
+		
+		
+		
+		
+		this.add(panel);
+		
+	}
+		public void actionPerformed(ActionEvent ae)
+	{
+			String command = ae.getActionCommand();
+		
+		if(command.equals(loginBtn.getText()))
+		{
+		   UserRepo ur = new UserRepo();
+			User user = ur.getUser(userTf.getText(), passF.getText());
+			
+			if(user!=null)
+		    {
+			     if(userTf.getText().equals("admin") && user.getUserId().equals(userTf.getText()) && user.getPassword().equals(passF.getText()))
+			    {
+				
+					AdminFrame af = new AdminFrame(user);
+					af.setVisible(true);
+			 		this.setVisible(false);
+			   }
+				
+			    else if(!userTf.getText().equals("admin"))
+				
+				   {
+					
+						if(user.getUserId().equals(userTf.getText()) && user.getPassword().equals(passF.getText()))
+						{
+							String userId=userTf.getText();
+					    
+						
+					        FacultyFrame ff = new FacultyFrame(this,userId);
+					        ff.setVisible(true);
+				            this.setVisible(false);
+						}
+						 else
+						   {
+					         JOptionPane.showMessageDialog(this, "Invaild request");
+					        
+				           }
+					}
+						
+				    }
+			
+						else
+						{
+					        JOptionPane.showMessageDialog(this, "Invaild request");
+					        
+				        }
+		}		
+		else if(command.equals(backBtn.getText()))
+		{
+			WelcomeFrame wf=new WelcomeFrame();
+			wf.setVisible(true);
+			this.setVisible(false);
+		}
+		
+		else{}
+	
+	}
+}
+	
